@@ -439,7 +439,7 @@
                             : `<span class="status status-removed"><i class="fa-solid fa-circle-check"></i> REMOVED</span>`;
 
                         html += `
-                        <tr class="table-row">
+                        <tr class="table-row" onclick="window.location.href='/report/${item.slug}'" style="cursor: pointer;">
                             <td>
                                 <div class="app-name"><i class="fa-solid fa-mobile-button"></i> ${item.app_name}</div>
                                 <div class="app-id">${item.package_id}</div>
