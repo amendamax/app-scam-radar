@@ -25,8 +25,17 @@ def init_db():
             added_date TEXT
         )
     """)
+
     conn.commit()
+    
+    # Check if empty, then seed
+    c.execute("SELECT COUNT(*) FROM malicious_apps")
+    if c.fetchone()[0] == 0:
+        import seed_db
+        seed_db.seed_demo_malware()
+    
     conn.close()
+
 
 init_db()
 
