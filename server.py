@@ -46,6 +46,7 @@ def read_root():
     with open("index.html", "r", encoding="utf-8") as f:
         return f.read()
 
+
 # API for frontend
 @app.get("/api/v1/apps")
 def get_apps(search: str = "", page: int = 1, limit: int = 50):
@@ -55,28 +56,30 @@ def get_apps(search: str = "", page: int = 1, limit: int = 50):
     
     if search:
         search_term = f"%{search}%"
-        c.execute("""
+        c.execute('''
             SELECT slug, app_name, package_id, platform, threat_type, risk_level, status
             FROM malicious_apps
             WHERE app_name LIKE ? OR package_id LIKE ? OR threat_type LIKE ?
             ORDER BY id DESC LIMIT ? OFFSET ?
-        """, (search_term, search_term, search_term, limit, offset))
+        ''', (search_term, search_term, search_term, limit, offset))
+        rows = c.fetchall()
         
-        c.execute("""
+        c.execute('''
             SELECT COUNT(*) FROM malicious_apps
             WHERE app_name LIKE ? OR package_id LIKE ? OR threat_type LIKE ?
-        """, (search_term, search_term, search_term))
+        ''', (search_term, search_term, search_term))
+        total = c.fetchone()[0]
     else:
-        c.execute("""
+        c.execute('''
             SELECT slug, app_name, package_id, platform, threat_type, risk_level, status
             FROM malicious_apps
             ORDER BY id DESC LIMIT ? OFFSET ?
-        """, (limit, offset))
+        ''', (limit, offset))
+        rows = c.fetchall()
         
         c.execute("SELECT COUNT(*) FROM malicious_apps")
+        total = c.fetchone()[0]
         
-    rows = c.fetchall()
-    total = c.fetchone()[0]
     conn.close()
     
     results = []
@@ -92,6 +95,7 @@ def get_apps(search: str = "", page: int = 1, limit: int = 50):
         })
         
     return {"total": total, "results": results}
+
 
 if __name__ == "__main__":
     import uvicorn
