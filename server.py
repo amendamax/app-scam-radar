@@ -117,7 +117,7 @@ async def daily_harvester():
 
 
 @app.get("/sitemap.xml", response_class=HTMLResponse)
-def sitemap():
+def sitemap(request: Request):
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("SELECT slug FROM malicious_apps ORDER BY id DESC")
@@ -128,14 +128,14 @@ def sitemap():
     
     # Base URL
     xml += '<url>\n'
-    xml += '  <loc>https://app-scam-radar.onrender.com/</loc>\n'
+    xml += '  <loc>{request.base_url}</loc>\n'
     xml += '  <changefreq>daily</changefreq>\n'
     xml += '  <priority>1.0</priority>\n'
     xml += '</url>\n'
     
     for row in rows:
         xml += '<url>\n'
-        xml += f'  <loc>https://app-scam-radar.onrender.com/report/{row[0]}</loc>\n'
+        xml += f'  <loc>{request.base_url}report/{row[0]}</loc>\n'
         xml += '  <changefreq>monthly</changefreq>\n'
         xml += '  <priority>0.8</priority>\n'
         xml += '</url>\n'
