@@ -118,7 +118,7 @@ async def daily_harvester():
 
 @app.get("/sitemap.xml", response_class=HTMLResponse)
 def sitemap():
-    conn = get_db_connection()
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("SELECT slug FROM malicious_apps ORDER BY id DESC")
     rows = c.fetchall()
@@ -145,7 +145,7 @@ def sitemap():
 
 @app.get("/report/{slug}", response_class=HTMLResponse)
 def get_report(slug: str):
-    conn = get_db_connection()
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("SELECT app_name, package_id, platform, threat_type, risk_level, status, description, added_date FROM malicious_apps WHERE slug = ?", (slug,))
     row = c.fetchone()
