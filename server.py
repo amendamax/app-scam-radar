@@ -161,6 +161,7 @@ def get_report(slug: str):
     <!DOCTYPE html>
     <html lang="en">
     <head>
+        <meta name="google-site-verification" content="_UoEuIcslAcPkg7YgpdYmWhmlpWW0M3t97xdHm27z38" />
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{app_name} - Malware Analysis & Removal Guide | AppScamRadar</title>
