@@ -1,151 +1,50 @@
-﻿from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+﻿import re
 
-from fastapi.staticfiles import StaticFiles
-import sqlite3
-import os
+# 1. UPDATE index.html
+with open("index.html", "r", encoding="utf-8") as f:
+    html = f.read()
 
-app = FastAPI()
-DB_PATH = "app_scams.db"
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# Make the table rows clickable
+html = html.replace('<tr class="table-row">', '<tr class="table-row" onclick="window.location.href=\'/report/${item.slug}\'" style="cursor: pointer;">')
 
-# Create DB
-def init_db():
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("""
-        CREATE TABLE IF NOT EXISTS malicious_apps (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            slug TEXT UNIQUE,
-            app_name TEXT,
-            package_id TEXT,
-            platform TEXT,
-            threat_type TEXT,
-            risk_level TEXT,
-            status TEXT,
-            description TEXT,
-            added_date TEXT
-        )
-    """)
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html)
 
-    conn.commit()
-    
-    # Check if empty, then seed
-    c.execute("SELECT COUNT(*) FROM malicious_apps")
-    if c.fetchone()[0] == 0:
-        import seed_db
-        seed_db.seed_demo_malware()
-    
-    conn.close()
+# 2. UPDATE server.py
+with open("server.py", "r", encoding="utf-8") as f:
+    server = f.read()
 
-
-init_db()
-
-# Read index.html
-@app.get("/", response_class=HTMLResponse)
-def read_root():
-    with open("index.html", "r", encoding="utf-8") as f:
-        return f.read()
-
-
-# API for frontend
-@app.get("/api/v1/apps")
-def get_apps(search: str = "", page: int = 1, limit: int = 50):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    offset = (page - 1) * limit
-    
-    if search:
-        search_term = f"%{search}%"
-        c.execute('''
-            SELECT slug, app_name, package_id, platform, threat_type, risk_level, status
-            FROM malicious_apps
-            WHERE app_name LIKE ? OR package_id LIKE ? OR threat_type LIKE ?
-            ORDER BY id DESC LIMIT ? OFFSET ?
-        ''', (search_term, search_term, search_term, limit, offset))
-        rows = c.fetchall()
-        
-        c.execute('''
-            SELECT COUNT(*) FROM malicious_apps
-            WHERE app_name LIKE ? OR package_id LIKE ? OR threat_type LIKE ?
-        ''', (search_term, search_term, search_term))
-        total = c.fetchone()[0]
-    else:
-        c.execute('''
-            SELECT slug, app_name, package_id, platform, threat_type, risk_level, status
-            FROM malicious_apps
-            ORDER BY id DESC LIMIT ? OFFSET ?
-        ''', (limit, offset))
-        rows = c.fetchall()
-        
-        c.execute("SELECT COUNT(*) FROM malicious_apps")
-        total = c.fetchone()[0]
-        
-    conn.close()
-    
-    results = []
-    for r in rows:
-        results.append({
-            "slug": r[0],
-            "app_name": r[1],
-            "package_id": r[2],
-            "platform": r[3],
-            "threat_type": r[4],
-            "risk_level": r[5],
-            "status": r[6]
-        })
-        
-    return {"total": total, "results": results}
-
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=10000)
-
-import asyncio
-import subprocess
-
-async def daily_harvester():
-    while True:
-        try:
-            print("Running daily MalwareBazaar harvester...")
-            subprocess.run(["python", "harvester.py"], check=False)
-        except Exception as e:
-            print(f"Harvester error: {e}")
-        # Run every 24 hours
-        await asyncio.sleep(86400)
-
-
+seo_routes = """
 @app.get("/sitemap.xml", response_class=HTMLResponse)
-def sitemap(request: Request):
-    conn = sqlite3.connect(DB_PATH)
+def sitemap():
+    conn = get_db_connection()
     c = conn.cursor()
     c.execute("SELECT slug FROM malicious_apps ORDER BY id DESC")
     rows = c.fetchall()
     
-    xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
-    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    xml = '<?xml version="1.0" encoding="UTF-8"?>\\n'
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\\n'
     
     # Base URL
-    xml += '<url>\n'
-    xml += '  <loc>{request.base_url}</loc>\n'
-    xml += '  <changefreq>daily</changefreq>\n'
-    xml += '  <priority>1.0</priority>\n'
-    xml += '</url>\n'
+    xml += '<url>\\n'
+    xml += '  <loc>https://app-scam-radar.onrender.com/</loc>\\n'
+    xml += '  <changefreq>daily</changefreq>\\n'
+    xml += '  <priority>1.0</priority>\\n'
+    xml += '</url>\\n'
     
     for row in rows:
-        xml += '<url>\n'
-        xml += f'  <loc>{request.base_url}report/{row[0]}</loc>\n'
-        xml += '  <changefreq>monthly</changefreq>\n'
-        xml += '  <priority>0.8</priority>\n'
-        xml += '</url>\n'
+        xml += '<url>\\n'
+        xml += f'  <loc>https://app-scam-radar.onrender.com/report/{row[0]}</loc>\\n'
+        xml += '  <changefreq>monthly</changefreq>\\n'
+        xml += '  <priority>0.8</priority>\\n'
+        xml += '</url>\\n'
         
     xml += '</urlset>'
     return HTMLResponse(content=xml, media_type="application/xml")
 
 @app.get("/report/{slug}", response_class=HTMLResponse)
 def get_report(slug: str):
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_db_connection()
     c = conn.cursor()
     c.execute("SELECT app_name, package_id, platform, threat_type, risk_level, status, description, added_date FROM malicious_apps WHERE slug = ?", (slug,))
     row = c.fetchone()
@@ -161,7 +60,6 @@ def get_report(slug: str):
     <!DOCTYPE html>
     <html lang="en">
     <head>
-        <meta name="google-site-verification" content="_UoEuIcslAcPkg7YgpdYmWhmlpWW0M3t97xdHm27z38" />
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{app_name} - Malware Analysis & Removal Guide | AppScamRadar</title>
@@ -189,16 +87,6 @@ def get_report(slug: str):
             .monetize-btn {{ display: inline-block; background: #10b981; color: #000; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 800; font-size: 18px; margin-top: 15px; transition: transform 0.2s; }}
             .monetize-btn:hover {{ transform: scale(1.05); }}
         </style>
-    
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-6V4XM02QDM"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-6V4XM02QDM');
-</script>
     </head>
     <body>
         <div class="container">
@@ -236,18 +124,16 @@ def get_report(slug: str):
                 <a href="https://isbrokersafe.com" class="monetize-btn">Protect Your Funds Now</a>
             </div>
         </div>
-    
-        <div style="max-width: 1140px; margin: 40px auto 0; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; color: #64748b; font-size: 13px;">
-            <p>&copy; 2026 AppScamRadar™ by VasileDev Group. All rights reserved. Powered globally by Cloudflare Edge Network.</p>
-        </div>
-
     </body>
     </html>
     '''
     return html
 
+"""
 
+if "def sitemap" not in server:
+    server = server.replace("@app.on_event", seo_routes + "\n\n@app.on_event")
+    with open("server.py", "w", encoding="utf-8") as f:
+        f.write(server)
 
-@app.on_event("startup")
-async def start_harvester():
-    asyncio.create_task(daily_harvester())
+print("SEO Engine injected!")
