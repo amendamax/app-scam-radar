@@ -1,24 +1,6 @@
 ﻿from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 
-import asyncio
-import os
-import subprocess
-
-async def daily_harvester():
-    while True:
-        try:
-            print("Running daily MalwareBazaar harvester...")
-            subprocess.run(["python", "harvester.py"], check=False)
-        except Exception as e:
-            print(f"Harvester error: {e}")
-        # Run every 24 hours
-        await asyncio.sleep(86400)
-
-@app.on_event("startup")
-async def startup_event():
-    asyncio.create_task(daily_harvester())
-
 from fastapi.staticfiles import StaticFiles
 import sqlite3
 import os
@@ -119,3 +101,20 @@ def get_apps(search: str = "", page: int = 1, limit: int = 50):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=10000)
+
+import asyncio
+import subprocess
+
+async def daily_harvester():
+    while True:
+        try:
+            print("Running daily MalwareBazaar harvester...")
+            subprocess.run(["python", "harvester.py"], check=False)
+        except Exception as e:
+            print(f"Harvester error: {e}")
+        # Run every 24 hours
+        await asyncio.sleep(86400)
+
+@app.on_event("startup")
+async def start_harvester():
+    asyncio.create_task(daily_harvester())
