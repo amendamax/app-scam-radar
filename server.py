@@ -6,6 +6,7 @@ import os
 
 app = FastAPI()
 DB_PATH = "app_scams.db"
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Create DB
 def init_db():
