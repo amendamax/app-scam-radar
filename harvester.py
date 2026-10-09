@@ -13,7 +13,7 @@ def run_harvester():
     print("Starting MalwareBazaar Harvester...")
     
     url = "https://mb-api.abuse.ch/api/v1/"
-    data = {'query': 'get_taginfo', 'tag': 'apk', 'limit': 1000}
+    data = {'query': 'get_taginfo', 'tag': 'apk', 'limit': 250}
     headers = {'Auth-Key': API_KEY}
     
     try:
