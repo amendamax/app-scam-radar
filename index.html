@@ -404,54 +404,68 @@
     </div>
 
     <script>
+
         let currentPage = 1;
         let currentSearch = '';
-        const limit = 20;
+        const limit = 50;
 
-        function loadData() {
-            // We will fetch from /api/v1/apps
-            // For now, let's inject a few demo rows manually until we build the DB
-            const tbody = document.getElementById('table-body');
-            
-            // Demo data
-            const demo = [
-                { slug: "super-fast-vpn", name: "Super Fast VPN Proxy", id: "com.fast.vpn.proxy", platform: "Google Play", threat: "Banking Trojan", risk: "Critical", status: "Active" },
-                { slug: "crypto-tracker-pro", name: "Crypto Tracker Pro", id: "io.crypto.tracker", platform: "App Store", threat: "Wallet Drainer", risk: "Critical", status: "Removed" },
-                { slug: "pdf-scanner-2024", name: "PDF Scanner & Editor 2024", id: "com.scanner.pdf.free", platform: "Google Play", threat: "Adware/Fleeceware", risk: "High", status: "Removed" },
-                { slug: "battery-optimizer", name: "Battery Optimizer MAX", id: "com.battery.saver.max", platform: "Third-party APK", threat: "Spyware", risk: "Critical", status: "Active" },
-                { slug: "whatsapp-pink", name: "WhatsApp Pink Update", id: "com.whatsapp.pink", platform: "Third-party APK", threat: "Worm / Trojan", risk: "Critical", status: "Active" }
-            ];
-
-            let html = '';
-            demo.forEach(item => {
-                let badgeClass = 'badge-adware';
-                if(item.threat.includes('Trojan') || item.threat.includes('Drainer')) badgeClass = 'badge-trojan';
-                if(item.threat.includes('Spyware')) badgeClass = 'badge-spyware';
+        async function loadData() {
+            try {
+                const response = await fetch(`/api/v1/apps?search=${currentSearch}&page=${currentPage}&limit=${limit}`);
+                const data = await response.json();
                 
-                let icon = '<i class="fa-brands fa-android"></i>';
-                if(item.platform.includes('Play')) icon = '<i class="fa-brands fa-google-play"></i>';
-                if(item.platform.includes('Store')) icon = '<i class="fa-brands fa-apple"></i>';
+                const tbody = document.getElementById('table-body');
+                let html = '';
                 
-                let statusHtml = item.status === 'Active' 
-                    ? `<span class="status status-active"><i class="fa-solid fa-circle-exclamation"></i> LIVE DANGER</span>`
-                    : `<span class="status status-removed"><i class="fa-solid fa-circle-check"></i> REMOVED</span>`;
+                if (data.results.length === 0) {
+                    html = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No malicious apps found matching your search.</td></tr>`;
+                } else {
+                    data.results.forEach(item => {
+                        let badgeClass = 'badge-adware';
+                        let threatLower = item.threat_type.toLowerCase();
+                        if(threatLower.includes('trojan') || threatLower.includes('drainer') || threatLower.includes('ransomware')) badgeClass = 'badge-trojan';
+                        if(threatLower.includes('spyware') || threatLower.includes('keylogger')) badgeClass = 'badge-spyware';
+                        
+                        let icon = '<i class="fa-brands fa-android"></i>';
+                        let platformLower = item.platform.toLowerCase();
+                        if(platformLower.includes('play')) icon = '<i class="fa-brands fa-google-play"></i>';
+                        if(platformLower.includes('store') || platformLower.includes('ios')) icon = '<i class="fa-brands fa-apple"></i>';
+                        
+                        let statusHtml = item.status.toLowerCase().includes('active')
+                            ? `<span class="status status-active"><i class="fa-solid fa-circle-exclamation"></i> LIVE DANGER</span>`
+                            : `<span class="status status-removed"><i class="fa-solid fa-circle-check"></i> REMOVED</span>`;
 
-                html += `
-                <tr class="table-row">
-                    <td>
-                        <div class="app-name"><i class="fa-solid fa-mobile-button"></i> ${item.name}</div>
-                        <div class="app-id">${item.id}</div>
-                    </td>
-                    <td><div class="platform">${icon} ${item.platform}</div></td>
-                    <td><span class="badge ${badgeClass}">${item.threat}</span></td>
-                    <td style="color: ${item.risk === 'Critical' ? '#ef4444' : '#fbbf24'}; font-weight: 700;">${item.risk}</td>
-                    <td>${statusHtml}</td>
-                </tr>
-                `;
-            });
-            
-            tbody.innerHTML = html;
-            document.getElementById('total-scams').innerText = '14,289';
+                        html += `
+                        <tr class="table-row">
+                            <td>
+                                <div class="app-name"><i class="fa-solid fa-mobile-button"></i> ${item.app_name}</div>
+                                <div class="app-id">${item.package_id}</div>
+                            </td>
+                            <td><div class="platform">${icon} ${item.platform}</div></td>
+                            <td><span class="badge ${badgeClass}">${item.threat_type}</span></td>
+                            <td style="color: ${item.risk_level === 'Critical' ? '#ef4444' : '#fbbf24'}; font-weight: 700;">${item.risk_level}</td>
+                            <td>${statusHtml}</td>
+                        </tr>
+                        `;
+                    });
+                }
+                
+                tbody.innerHTML = html;
+                document.getElementById('total-scams').innerText = data.total.toLocaleString();
+                document.getElementById('page-info').innerText = `Page ${currentPage}`;
+                
+                document.getElementById('prev-btn').disabled = currentPage === 1;
+                document.getElementById('next-btn').disabled = (currentPage * limit) >= data.total;
+                
+            } catch (err) {
+                console.error("Failed to load data:", err);
+            }
+        }
+
+        function changePage(delta) {
+            currentPage += delta;
+            if(currentPage < 1) currentPage = 1;
+            loadData();
         }
 
         document.getElementById('search-input').addEventListener('input', (e) => {
@@ -461,6 +475,7 @@
         });
 
         loadData();
+
     </script>
 </body>
 </html>
