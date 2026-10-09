@@ -1,5 +1,24 @@
 ﻿from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
+
+import asyncio
+import os
+import subprocess
+
+async def daily_harvester():
+    while True:
+        try:
+            print("Running daily MalwareBazaar harvester...")
+            subprocess.run(["python", "harvester.py"], check=False)
+        except Exception as e:
+            print(f"Harvester error: {e}")
+        # Run every 24 hours
+        await asyncio.sleep(86400)
+
+@app.on_event("startup")
+async def startup_event():
+    asyncio.create_task(daily_harvester())
+
 from fastapi.staticfiles import StaticFiles
 import sqlite3
 import os
