@@ -1,4 +1,4 @@
-﻿from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 
 from fastapi.staticfiles import StaticFiles
@@ -128,7 +128,7 @@ def sitemap(request: Request):
     
     # Base URL
     xml += '<url>\n'
-    xml += '  <loc>{request.base_url}</loc>\n'
+    xml += f'  <loc>{request.base_url}</loc>\n'
     xml += '  <changefreq>daily</changefreq>\n'
     xml += '  <priority>1.0</priority>\n'
     xml += '</url>\n'
@@ -238,7 +238,7 @@ def get_report(slug: str):
         </div>
     
         <div style="max-width: 1140px; margin: 40px auto 0; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; color: #64748b; font-size: 13px;">
-            <p>&copy; 2026 AppScamRadar™ by VasileDev Group. All rights reserved. Powered globally by Cloudflare Edge Network.</p>
+            <p>&copy; 2026 AppScamRadar� by VasileDev Group. All rights reserved. Powered globally by Cloudflare Edge Network.</p>
         </div>
 
     </body>
