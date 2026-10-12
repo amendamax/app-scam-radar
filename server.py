@@ -490,31 +490,49 @@ def get_report(slug: str):
 
     
 
-        <div style="max-width: 1140px; margin: 40px auto 0; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; color: #64748b; font-size: 13px;">
-
-            <p>&copy; 2026 AppScamRadar by VasileDev Group. All rights reserved. Powered globally by Cloudflare Edge Network.</p>
-
-        </div>
-
-
-
-    
-        <div style="margin-top: 60px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-            <div style="background: rgba(11, 18, 30, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); padding: 25px; border-radius: 12px; text-align: center;">
-                <h3 style="color: #38bdf8; margin: 0 0 10px 0;">🛡️ Generate a Fake Identity</h3>
-                <p style="color: #94a3b8; font-size: 14px; line-height: 1.6; margin-bottom: 20px;">Don\'t give fake apps or scam recruiters your real phone number or email. Use Surfshark Alternative ID to generate working proxy details and protect yourself from identity theft.</p>
-                <a href="https://www.tkqlhce.com/click-101863908-15740542" target="_blank" rel="sponsored noopener noreferrer" style="display: inline-block; background: rgba(56, 189, 248, 0.1); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">Protect Your Identity (Alternative ID)</a>
+        <footer class="vasiledev-ecosystem-footer" style="background: #03060a; border-top: 1px solid rgba(255, 255, 255, 0.1); padding: 50px 20px 24px; font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #94a3b8; font-size: 0.85rem; line-height: 1.6; text-align: left; margin-top: 60px;">
+        <div style="max-width: 1140px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 36px; margin-bottom: 36px;">
+            <div>
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-size: 16px;">
+                        <i class="fa-solid fa-bug"></i>
+                    </span>
+                    <span style="font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 800; color: #ffffff; letter-spacing: -0.3px;">
+                        APPSCAM<strong style="color: #38bdf8;">RADAR</strong>
+                    </span>
+                </div>
+                <p style="color: #94a3b8; font-size: 0.85rem; line-height: 1.5; margin: 0 0 12px 0;">
+                    Global mobile threat intelligence. Scanning and exposing malicious Android & iOS applications to protect user data.
+                </p>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <span style="background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px;">✔️ VIES Verified EU</span>
+                    <span style="background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px;">🛡️ 100% Free Public Utility</span>
+                </div>
             </div>
-            
-            <div style="background: rgba(11, 18, 30, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); padding: 25px; border-radius: 12px; text-align: center;">
-                <h3 style="color: #10b981; margin: 0 0 10px 0;">🔒 Encrypt Your Phone</h3>
-                <p style="color: #94a3b8; font-size: 14px; line-height: 1.6; margin-bottom: 20px;">Accidentally installed a malicious APK or clicked a bad link? Encrypt your entire connection and protect your passwords with NordVPN.</p>
-                <a href="https://www.kqzyfj.com/click-101863908-13756265" target="_blank" rel="sponsored noopener noreferrer" style="display: inline-block; background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">Secure My Device (NordVPN)</a><img src="https://www.awltovhc.com/image-101863908-13756265" width="1" height="1" border="0" style="display:none;"/>
+            <div>
+                <h4 style="font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 700; color: #38bdf8; margin: 0 0 14px 0;">VasileDev Group Ecosystem</h4>
+                <p style="margin: 0 0 8px 0; color: #cbd5e1; font-size: 0.85rem;">VAT / P.IVA: <code style="background: rgba(255, 255, 255, 0.1); color: #38bdf8; padding: 2px 6px; border-radius: 4px; font-family: monospace;">IT04226190041</code></p>
+                <p style="margin: 0 0 8px 0; color: #94a3b8; font-size: 0.85rem;">Locations: Garessio (CN), Italy &amp; Odobești, Romania</p>
+                <p style="margin: 0; color: #94a3b8; font-size: 0.85rem;">Direct: <a href="mailto:amendamax@vasiledev.com" style="color: #cbd5e1; text-decoration: none;">amendamax@vasiledev.com</a></p>
+            </div>
+            <div>
+                <h4 style="font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 700; color: #38bdf8; margin: 0 0 14px 0;">Official Network</h4>
+                <p style="margin: 0 0 8px 0;"><a href="https://isbrokersafe.com" target="_blank" rel="noopener" style="color: #cbd5e1; font-weight: 400; text-decoration: none;">⚖️ IsBrokerSafe.com</a></p>
+                <p style="margin: 0 0 8px 0;"><a href="https://jobscamradar.com" target="_blank" rel="noopener" style="color: #cbd5e1; font-weight: 400; text-decoration: none;">🛡️ JobScamRadar.com</a></p>
+                <p style="margin: 0 0 8px 0;"><a href="https://pillscamradar.com" target="_blank" rel="noopener" style="color: #cbd5e1; font-weight: 400; text-decoration: none;">💊 PillScamRadar.com</a></p>
+                <p style="margin: 0 0 8px 0;"><a href="https://verifydating.net" target="_blank" rel="noopener" style="color: #cbd5e1; font-weight: 400; text-decoration: none;">🛡️ VerifyDating.net</a></p>
+                <p style="margin: 0 0 8px 0;"><a href="https://appscamradar.com" target="_blank" rel="noopener" style="color: #38bdf8; font-weight: 700; text-decoration: none;">👾 AppScamRadar.com</a></p>
+                <p style="margin: 0 0 8px 0;"><a href="https://dreamcarhunt.com" target="_blank" rel="noopener" style="color: #cbd5e1; text-decoration: none;">🏎️ DreamCarHunt.com</a></p>
+                <p style="margin: 0 0 8px 0;"><a href="https://airparkrefund.com" target="_blank" rel="noopener" style="color: #cbd5e1; text-decoration: none;">✈️ AirParkRefund.com</a></p>
+                <p style="margin: 0;"><a href="https://vasiledev.com" target="_blank" rel="noopener" style="color: #cbd5e1; text-decoration: none;">👨‍💻 VasileDev.com</a></p>
             </div>
         </div>
-        <p style="font-size: 12px; color: rgba(148, 163, 184, 0.5); text-align: center; margin-top: 20px;">Disclosure: Sponsored links help keep this database free to the public.</p>
+        <div style="max-width: 1140px; margin: 0 auto; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 20px; text-align: center; font-size: 0.8rem; color: #64748b;">
+            <p style="margin: 0;">&copy; 2026 AppScamRadar™ by VasileDev Group. All rights reserved. Powered globally by Cloudflare Edge Network.</p>
+        </div>
+    </footer>
 
-    </body>
+</body>
 
     </html>
 
