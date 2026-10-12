@@ -3,7 +3,7 @@
 <head>
     <meta name="google-site-verification" content="_UoEuIcslAcPkg7YgpdYmWhmlpWW0M3t97xdHm27z38" />
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-width=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AppScamRadar - Malicious App & Malware Blacklist</title>
     <meta name="description" content="Search the largest database of malicious Android, iOS, and APK apps. We expose banking trojans, spyware, and fake VPNs.">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -187,7 +187,49 @@
             font-weight: 600;
         }
 
-        .table-container {
+        
+        .scam-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 100px;
+        }
+        .scam-card {
+            background: rgba(11, 18, 30, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .scam-card:hover {
+            background: rgba(17, 27, 43, 0.6);
+            border-color: rgba(239, 68, 68, 0.3);
+            transform: translateY(-2px);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .app-name-wrap {
+            flex: 1;
+        }
+        .card-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+        table, thead, tbody, tr, th, td { display: none !important; } /* Hide old table completely just in case */
+.table-container-old {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px 100px;
@@ -394,21 +436,9 @@
         </div>
     </div>
 
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Application</th>
-                    <th>Platform</th>
-                    <th>Threat Type</th>
-                    <th>Risk Level</th>
-                    <th>Store Status</th>
-                </tr>
-            </thead>
-            <tbody id="table-body">
-                <!-- Data injected via JS -->
-            </tbody>
-        </table>
+    <div class="scam-grid" id="table-body">
+            <!-- Data injected via JS -->
+        </div>
         
         <div class="pagination">
             <button class="page-btn" id="prev-btn" onclick="changePage(-1)" disabled><i class="fa-solid fa-angle-left"></i> Prev</button>
@@ -432,7 +462,7 @@
                 let html = '';
                 
                 if (data.results.length === 0) {
-                    html = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No malicious apps found matching your search.</td></tr>`;
+                    html = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px;">No malicious apps found matching your search.</div>`;
                 } else {
                     data.results.forEach(item => {
                         let badgeClass = 'badge-adware';
