@@ -479,24 +479,8 @@
                             ? `<span class="status status-active"><i class="fa-solid fa-circle-exclamation"></i> LIVE DANGER</span>`
                             : `<span class="status status-removed"><i class="fa-solid fa-circle-check"></i> REMOVED</span>`;
 
-                        html += 
-                        <div class="scam-card" onclick="window.location.href='/report/'">
-                            <div class="card-header">
-                                <div class="app-name-wrap">
-                                    <div class="app-name"><i class="fa-solid fa-mobile-button"></i> </div>
-                                    <div class="app-id"></div>
-                                </div>
-                                <div style="color: ; font-weight: 700;"></div>
-                            </div>
-                            <div class="card-row" style="margin-top: 15px;">
-                                <div class="platform"> </div>
-                                <span class="badge "></span>
-                            </div>
-                            <div class="card-row" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05);">
-                                
-                            </div>
-                        </div>
-                        ;>
+                        html += `
+                        <tr class="table-row" onclick="window.location.href='/report/${item.slug}'" style="cursor: pointer;">
                             <td>
                                 <div class="app-name"><i class="fa-solid fa-mobile-button"></i> ${item.app_name}</div>
                                 <div class="app-id">${item.package_id}</div>
