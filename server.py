@@ -14,6 +14,20 @@ import os
 
 app = FastAPI()
 
+import urllib.request
+
+@app.get("/admin/force-sync-db")
+async def force_sync_db(secret: str):
+    if secret != "vasile2026":
+        return {"error": "Unauthorized"}
+    try:
+        url = "https://raw.githubusercontent.com/amendamax/app-scam-radar/main/app_scams.db"
+        urllib.request.urlretrieve(url, DB_PATH)
+        return {"status": "Success", "message": "app_scams.db downloaded and overwritten from GitHub raw!"}
+    except Exception as e:
+        return {"error": str(e)}
+
+
 DB_PATH = "app_scams.db"
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
