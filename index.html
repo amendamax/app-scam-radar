@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta name="google-site-verification" content="_UoEuIcslAcPkg7YgpdYmWhmlpWW0M3t97xdHm27z38" />
@@ -480,16 +480,22 @@
                             : `<span class="status status-removed"><i class="fa-solid fa-circle-check"></i> REMOVED</span>`;
 
                         html += `
-                        <tr class="table-row" onclick="window.location.href='/report/${item.slug}'" style="cursor: pointer;">
-                            <td>
-                                <div class="app-name"><i class="fa-solid fa-mobile-button"></i> ${item.app_name}</div>
-                                <div class="app-id">${item.package_id}</div>
-                            </td>
-                            <td><div class="platform">${icon} ${item.platform}</div></td>
-                            <td><span class="badge ${badgeClass}">${item.threat_type}</span></td>
-                            <td style="color: ${item.risk_level === 'Critical' ? '#ef4444' : '#fbbf24'}; font-weight: 700;">${item.risk_level}</td>
-                            <td>${statusHtml}</td>
-                        </tr>
+                        <div class="scam-card" onclick="window.location.href='/report/${item.slug}'">
+                            <div class="card-header">
+                                <div class="app-name-wrap">
+                                    <div class="app-name"><i class="fa-solid fa-mobile-button"></i> ${item.app_name}</div>
+                                    <div class="app-id">${item.package_id}</div>
+                                </div>
+                                <div style="color: ${item.risk_level === 'Critical' ? '#ef4444' : '#fbbf24'}; font-weight: 700;">${item.risk_level}</div>
+                            </div>
+                            <div class="card-row" style="margin-top: 15px;">
+                                <div class="platform">${icon} ${item.platform}</div>
+                                <span class="badge ${badgeClass}">${item.threat_type}</span>
+                            </div>
+                            <div class="card-row" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05);">
+                                ${statusHtml}
+                            </div>
+                        </div>
                         `;
                     });
                 }
