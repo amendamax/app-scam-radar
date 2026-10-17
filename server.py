@@ -282,7 +282,16 @@ def read_root():
         FROM malicious_apps
         WHERE app_name NOT IN ('Unknown Malware Threat', 'App', 'Release', 'V6', 'Payload', 'Copybara Threat')
           AND app_name NOT LIKE 'Unknown%'
-        ORDER BY CASE WHEN package_id NOT LIKE 'sha256:%' THEN 0 ELSE 1 END, id DESC
+        ORDER BY
+          CASE
+            WHEN platform IN ('Android Sideloaded APK', 'Google Play (Removed)', 'Google Play / APK', 'Google Play (Removed) / APK', 'Google Play (Delisted) / APK') AND app_name NOT LIKE '%Spyware APK)%' THEN 0
+            WHEN platform IN ('Google Play Store', 'Apple App Store', 'Both (Cross-Platform)') THEN 1
+            WHEN platform = 'Android Sideloaded APK' THEN 2
+            WHEN platform = 'Android Hidden System Package' THEN 3
+            WHEN package_id NOT LIKE 'sha256:%' THEN 4
+            ELSE 5
+          END,
+          id ASC
         LIMIT 50
     """)
     rows = c.fetchall()
@@ -343,7 +352,16 @@ def get_apps(search: str = "", page: int = 1, limit: int = 50):
             FROM malicious_apps
             WHERE app_name NOT IN ('Unknown Malware Threat', 'App', 'Release', 'V6', 'Payload', 'Copybara Threat')
               AND app_name NOT LIKE 'Unknown%'
-            ORDER BY CASE WHEN package_id NOT LIKE 'sha256:%' THEN 0 ELSE 1 END, id DESC
+            ORDER BY
+              CASE
+                WHEN platform IN ('Android Sideloaded APK', 'Google Play (Removed)', 'Google Play / APK', 'Google Play (Removed) / APK', 'Google Play (Delisted) / APK') AND app_name NOT LIKE '%Spyware APK)%' THEN 0
+                WHEN platform IN ('Google Play Store', 'Apple App Store', 'Both (Cross-Platform)') THEN 1
+                WHEN platform = 'Android Sideloaded APK' THEN 2
+                WHEN platform = 'Android Hidden System Package' THEN 3
+                WHEN package_id NOT LIKE 'sha256:%' THEN 4
+                ELSE 5
+              END,
+              id ASC
             LIMIT ? OFFSET ?
         ''', (limit, offset))
         rows = c.fetchall()
@@ -463,7 +481,19 @@ def serve_privacy():
 def sitemap(request: Request):
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    c.execute("SELECT slug, added_date FROM malicious_apps ORDER BY id DESC")
+    c.execute("""
+        SELECT slug, added_date FROM malicious_apps
+        ORDER BY
+          CASE
+            WHEN platform IN ('Android Sideloaded APK', 'Google Play (Removed)', 'Google Play / APK', 'Google Play (Removed) / APK', 'Google Play (Delisted) / APK') AND app_name NOT LIKE '%Spyware APK)%' THEN 0
+            WHEN platform IN ('Google Play Store', 'Apple App Store', 'Both (Cross-Platform)') THEN 1
+            WHEN platform = 'Android Sideloaded APK' THEN 2
+            WHEN platform = 'Android Hidden System Package' THEN 3
+            WHEN package_id NOT LIKE 'sha256:%' THEN 4
+            ELSE 5
+          END,
+          id ASC
+    """)
     rows = c.fetchall()
     conn.close()
 
@@ -641,7 +671,21 @@ async def get_seo_directory(page: int):
         page = total_pages
 
     offset = (page - 1) * 50
-    c.execute("SELECT slug, app_name, package_id, platform, threat_type, risk_level, status, added_date FROM malicious_apps ORDER BY CASE WHEN package_id NOT LIKE 'sha256:%' THEN 0 ELSE 1 END, id DESC LIMIT 50 OFFSET ?", (offset,))
+    c.execute("""
+        SELECT slug, app_name, package_id, platform, threat_type, risk_level, status, added_date
+        FROM malicious_apps
+        ORDER BY
+          CASE
+            WHEN platform IN ('Android Sideloaded APK', 'Google Play (Removed)', 'Google Play / APK', 'Google Play (Removed) / APK', 'Google Play (Delisted) / APK') AND app_name NOT LIKE '%Spyware APK)%' THEN 0
+            WHEN platform IN ('Google Play Store', 'Apple App Store', 'Both (Cross-Platform)') THEN 1
+            WHEN platform = 'Android Sideloaded APK' THEN 2
+            WHEN platform = 'Android Hidden System Package' THEN 3
+            WHEN package_id NOT LIKE 'sha256:%' THEN 4
+            ELSE 5
+          END,
+          id ASC
+        LIMIT 50 OFFSET ?
+    """, (offset,))
     rows = c.fetchall()
     conn.close()
 

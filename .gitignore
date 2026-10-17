@@ -21,3 +21,4 @@ make_*.py
 update_*.py
 mount_static.py
 check_db.py
+seed_high_intent_apps.py
