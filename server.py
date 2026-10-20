@@ -506,13 +506,13 @@ def sitemap(request: Request):
         f'  <url><loc>https://appscamradar.com/</loc><lastmod>{today}</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>',
         f'  <url><loc>https://appscamradar.com/privacy</loc><lastmod>{today}</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>',
     ]
-    for p in range(1, total_pages + 1):
-        xml.append(f'  <url><loc>https://appscamradar.com/directory/apps/{p}</loc><lastmod>{today}</lastmod><changefreq>daily</changefreq><priority>0.85</priority></url>')
-
     for slug, added_date in rows:
         safe_slug = html_lib.escape(slug)
         lastmod = added_date if added_date and len(str(added_date)) == 10 else today
-        xml.append(f'  <url><loc>https://appscamradar.com/report/{safe_slug}</loc><lastmod>{lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>')
+        xml.append(f'  <url><loc>https://appscamradar.com/report/{safe_slug}</loc><lastmod>{lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>')
+
+    for p in range(1, total_pages + 1):
+        xml.append(f'  <url><loc>https://appscamradar.com/directory/apps/{p}</loc><lastmod>{today}</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>')
 
     xml.append('</urlset>')
     return HTMLResponse(content="\n".join(xml), media_type="application/xml")
@@ -730,10 +730,10 @@ async def get_seo_directory(page: int):
     </head>
     <body>
         <header>
-            <a href="/"><h1>📱 AppScamRadar</h1></a>
+            <a href="/"><div style="margin: 0; font-size: 24px; font-weight: 800; color: #f8fafc;">📱 AppScamRadar</div></a>
         </header>
         <div class="container">
-            <h2 style="margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">Malicious App &amp; APK Directory — Page {page} of {total_pages} ({total} Total)</h2>
+            <h1 style="font-size: 24px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">Malicious App &amp; APK Directory — Page {page} of {total_pages} ({total} Total)</h1>
             {items_html}
             <div class="pagination">
                 {prev_link}
